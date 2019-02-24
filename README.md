@@ -6,6 +6,7 @@
 
 * Get UID of authenticated account
 * Get UIDs of other accounts by their usernames
+* Lazily reestablishes authentication session
 
 ## Usage
 
