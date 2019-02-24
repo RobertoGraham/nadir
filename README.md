@@ -1,4 +1,6 @@
-### nadir
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.robertograham/nadir.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/search?q=g:%22io.github.robertograham%22%20AND%20a:%22nadir%22)
+
+# nadir
 
 ## Features
 
