@@ -6,11 +6,11 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.json.bind.adapter.JsonbAdapter;
-import javax.json.stream.JsonParsingException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -18,7 +18,8 @@ enum JsonOptionalResultResponseHandlerProvider implements OptionalResultResponse
 
     INSTANCE(
         Token.Adapter.INSTANCE,
-        AccountImpl.Adapter.INSTANCE
+        AccountImpl.Adapter.INSTANCE,
+        XSearchResult.Adapter.INSTANCE
     );
 
     private final ResponseHandler<Optional<String>> stringOptionalHandler;
@@ -65,7 +66,7 @@ enum JsonOptionalResultResponseHandlerProvider implements OptionalResultResponse
             try (inputStream;
                  final var jsonReader = Json.createReader(inputStream)) {
                 throw new StryderErrorException(statusCodeInt, jsonReader.readObject());
-            } catch (final JsonParsingException exception) {
+            } catch (final JsonException ignored) {
                 throw new StryderErrorException(statusLine, response.getAllHeaders());
             }
         };

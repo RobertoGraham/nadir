@@ -6,21 +6,29 @@ import java.util.Objects;
 
 final class AccountImpl implements Account {
 
-    private final long id;
+    private final long userId;
+    private final String username;
 
-    private AccountImpl(long id) {
-        this.id = id;
+    private AccountImpl(long userId) {
+        this.userId = userId;
+        this.username = "";
     }
 
     @Override
-    public long id() {
-        return id;
+    public long userId() {
+        return userId;
+    }
+
+    @Override
+    public String username() {
+        return username;
     }
 
     @Override
     public String toString() {
         return "AccountImpl{" +
-            "id=" + id +
+            "userId=" + userId +
+            ", username='" + username + '\'' +
             '}';
     }
 
@@ -30,13 +38,14 @@ final class AccountImpl implements Account {
             return true;
         if (!(object instanceof AccountImpl))
             return false;
-        final var account = (AccountImpl) object;
-        return id == account.id;
+        final var accountImpl = (AccountImpl) object;
+        return userId == accountImpl.userId &&
+            username.equals(accountImpl.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(userId, username);
     }
 
     enum Adapter implements JsonbAdapter<AccountImpl, JsonObject> {
