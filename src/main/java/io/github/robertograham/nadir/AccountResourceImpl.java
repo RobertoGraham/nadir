@@ -64,7 +64,8 @@ final class AccountResourceImpl implements AccountResource {
         return httpClient.execute(
             RequestBuilder.get("https://api1.origin.com/xsearch/users")
                 .addParameter("userId", accountIdString)
-                .addParameter("searchTerm", String.join("\tOR\t", searchTerms))
+                .addParameter("searchTerm", String.join("\tOR\t", searchTerms)
+                    .replaceAll("\\s+", "\t"))
                 .addParameter("start", "0")
                 .setHeader("authToken", tokenSupplier.get().accessToken())
                 .build(),
