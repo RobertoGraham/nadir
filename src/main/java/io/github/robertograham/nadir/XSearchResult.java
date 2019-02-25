@@ -4,17 +4,17 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.bind.adapter.JsonbAdapter;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 final class XSearchResult {
 
     private final long totalCount;
-    private final Set<String> friendUserIds;
+    private final List<String> friendUserIds;
 
-    private XSearchResult(long totalCount, Set<String> friendUserIds) {
+    private XSearchResult(long totalCount, List<String> friendUserIds) {
         this.totalCount = totalCount;
         this.friendUserIds = friendUserIds;
     }
@@ -23,7 +23,7 @@ final class XSearchResult {
         return totalCount;
     }
 
-    public Set<String> friendUserIds() {
+    public List<String> friendUserIds() {
         return friendUserIds;
     }
 
@@ -65,14 +65,16 @@ final class XSearchResult {
             return new XSearchResult(
                 jsonObject.getJsonNumber("totalCount")
                     .longValueExact(),
-                Optional.ofNullable(jsonObject.getJsonArray("infoList"))
+                Optional.ofNullable(jsonObject.isNull("infoList") ?
+                    null
+                    : jsonObject.getJsonArray("infoList"))
                     .map((final var jsonArray) -> jsonArray.stream()
                         .filter(Objects::nonNull)
                         .filter((final var jsonValue) -> jsonValue instanceof JsonObject)
                         .map(JsonValue::asJsonObject)
                         .map((final var friendUserJsonObject) -> friendUserJsonObject.getString("friendUserId"))
-                        .collect(Collectors.toSet())
-                    ).orElseGet(Collections::emptySet)
+                        .collect(Collectors.toUnmodifiableList()))
+                    .orElseGet(Collections::emptyList)
             );
         }
     }

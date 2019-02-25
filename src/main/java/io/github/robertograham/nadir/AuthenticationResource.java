@@ -106,7 +106,12 @@ final class AuthenticationResource {
 
     private Optional<Token> fetchToken() throws IOException {
         return httpClient.execute(
-            RequestBuilder.get("https://accounts.ea.com/connect/auth?client_id=ORIGIN_JS_SDK&response_type=token&redirect_uri=nucleus:rest&prompt=none&release_type=prod")
+            RequestBuilder.get("https://accounts.ea.com/connect/auth")
+                .addParameter("client_id", "ORIGIN_JS_SDK")
+                .addParameter("response_type", "token")
+                .addParameter("redirect_uri", "nucleus:rest")
+                .addParameter("prompt", "none")
+                .addParameter("release_type", "prod")
                 .build(),
             optionalResultResponseHandlerProvider.forClass(Token.class)
         );
@@ -115,17 +120,17 @@ final class AuthenticationResource {
     Optional<Token> userCredentialsGrantedToken(final String emailAddress,
                                                 final String password) throws IOException {
         final var firstLocationUrlString = firstLocationUrl()
-            .orElseThrow(() -> new IllegalStateException("Couldn't find first Location header value"));
+            .orElseThrow(() -> new IOException("Couldn't find first Location header value"));
         final var fid = extractFidParameterValueFromUrl(firstLocationUrlString)
-            .orElseThrow(() -> new IllegalStateException("Couldn't find fid query parameter value"));
+            .orElseThrow(() -> new IOException("Couldn't find fid query parameter value"));
         final var secondLocationPathString = secondLocationPathFromFirstLocationUrl(firstLocationUrlString)
-            .orElseThrow(() -> new IllegalStateException("Couldn't find second Location header value"));
+            .orElseThrow(() -> new IOException("Couldn't find second Location header value"));
         final var thirdLocationUrlString = thirdLocationUrlFromSecondLocationPath(secondLocationPathString)
-            .orElseThrow(() -> new IllegalStateException("Couldn't find third Location header value"));
+            .orElseThrow(() -> new IOException("Couldn't find third Location header value"));
         final var windowLocationString = windowLocationFromThirdLocationUrl(emailAddress, password, thirdLocationUrlString)
-            .orElseThrow(() -> new IllegalStateException("Couldn't find window.location"));
+            .orElseThrow(() -> new IOException("Couldn't find window.location"));
         final var fourthLocationUrlString = fourthLocationUrlFromWindowLocation(windowLocationString)
-            .orElseThrow(() -> new IllegalStateException("Couldn't find fourth Location header value"));
+            .orElseThrow(() -> new IOException("Couldn't find fourth Location header value"));
         requestFourthLocationUrl(fourthLocationUrlString);
         return fetchToken();
     }

@@ -53,7 +53,7 @@ final class AccountResourceImpl implements AccountResource {
         return accountImplOptional.map(Function.identity());
     }
 
-    private Optional<Set<String>> findAllUserIdsBySearchTerms(final String... searchTerms) throws IOException {
+    private Optional<List<String>> findAllUserIdsBySearchTerms(final String... searchTerms) throws IOException {
         Objects.requireNonNull(searchTerms, "searchTerms cannot be null");
         for (final var nameString : searchTerms)
             Objects.requireNonNull(nameString, "searchTerms cannot contain a null value");
@@ -76,7 +76,6 @@ final class AccountResourceImpl implements AccountResource {
     @Override
     public Optional<List<Account>> findAllBySearchTerms(final String... searchTerms) throws IOException {
         final var userIdStringList = findAllUserIdsBySearchTerms(searchTerms)
-            .map(ArrayList::new)
             .orElseThrow(() -> new IOException("Failed to fetch user IDs from search terms"));
         final var userIdPartitionListList = IntStream.range(0, userIdStringList.size())
             .boxed()
@@ -98,7 +97,7 @@ final class AccountResourceImpl implements AccountResource {
                         .stream())
                     .collect(Collectors.toUnmodifiableList()))
             )
-            .orElseGet(Optional::empty);
+            .orElseGet(() -> Optional.of(Collections.emptyList()));
     }
 
     private Optional<List<Account>> findAllByUserIds(final List<String> userIds) throws IOException {
