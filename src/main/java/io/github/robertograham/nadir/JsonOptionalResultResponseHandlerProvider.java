@@ -17,7 +17,7 @@ import java.util.Optional;
 enum JsonOptionalResultResponseHandlerProvider implements OptionalResultResponseHandlerProvider {
 
     INSTANCE(
-        Token.Adapter.INSTANCE,
+        TokenImpl.Adapter.INSTANCE,
         AccountImpl.Adapter.INSTANCE,
         XSearchResult.Adapter.INSTANCE
     );

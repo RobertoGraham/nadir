@@ -7,6 +7,11 @@ import org.apache.http.client.HttpResponseException;
 import javax.json.JsonObject;
 import java.util.Optional;
 
+/**
+ * An exception thrown due to erroneous HTTP responses
+ *
+ * @since 1.0.0
+ */
 public final class StryderErrorException extends HttpResponseException {
 
     private final JsonObject jsonObject;
@@ -21,6 +26,11 @@ public final class StryderErrorException extends HttpResponseException {
         jsonObject = null;
     }
 
+    /**
+     * @return an {@link Optional} of {@link JsonObject} that's non-empty if a JSON object
+     * was included in the erroneous HTTP response
+     * @since 1.0.0
+     */
     public Optional<JsonObject> jsonObject() {
         return Optional.ofNullable(jsonObject);
     }

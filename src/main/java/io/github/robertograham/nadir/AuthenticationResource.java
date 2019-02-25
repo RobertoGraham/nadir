@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 final class AuthenticationResource {
@@ -113,8 +114,9 @@ final class AuthenticationResource {
                 .addParameter("prompt", "none")
                 .addParameter("release_type", "prod")
                 .build(),
-            optionalResultResponseHandlerProvider.forClass(Token.class)
-        );
+            optionalResultResponseHandlerProvider.forClass(TokenImpl.class)
+        )
+            .map(Function.identity());
     }
 
     Optional<Token> userCredentialsGrantedToken(final String emailAddress,
