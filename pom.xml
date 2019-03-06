@@ -5,7 +5,7 @@
 
     <groupId>io.github.robertograham</groupId>
     <artifactId>nadir</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -31,7 +31,7 @@
         <url>https://github.com/RobertoGraham/nadir</url>
         <connection>scm:git:git://github.com/RobertoGraham/nadir.git</connection>
         <developerConnection>scm:git:git@github.com:RobertoGraham/nadir.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>nadir-1.1.0</tag>
     </scm>
 
     <distributionManagement>
