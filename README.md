@@ -7,6 +7,7 @@
 * Get UID of authenticated account
 * Get UIDs of other accounts by their usernames
 * Lazily reestablishes authentication session
+* Can establish connection to Origin's XMPP server
 
 ## Usage
 
@@ -52,6 +53,31 @@ public final class Main {
                     .filter((final var account) -> usernameString.equalsIgnoreCase(account.username()))
                     .findFirst()
                     .map(Account::userId))
+                .ifPresent(System.out::println);
+        } catch (final IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+}
+```
+
+### Establish connection to Origin's XMPP server
+
+```java
+import io.github.robertograham.nadir.Nadir;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+
+import java.io.IOException;
+
+public final class Main {
+
+    public static void main(final String[] args) {
+        try (final var nadir = Nadir.newBuilder("emailAddress", "password")
+            .establishXmppConnection(true)
+            .debugXmppTraffic(true)
+            .build()) {
+            nadir.xmppConnection()
+                .map(AbstractXMPPConnection::isAuthenticated)
                 .ifPresent(System.out::println);
         } catch (final IOException exception) {
             exception.printStackTrace();

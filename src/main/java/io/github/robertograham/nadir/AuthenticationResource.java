@@ -82,7 +82,7 @@ final class AuthenticationResource {
                 .build(),
             optionalResultResponseHandlerProvider.forString()
         )
-            .orElseThrow(() -> new IllegalStateException("Couldn't find html"));
+            .orElseThrow(() -> new IOException("Couldn't find html"));
         try (final var scanner = new Scanner(htmlString)) {
             return scanner.findAll(Pattern.compile("\\R+\\s+window.location\\s*=\\s*\"(.*)\";\\R+"))
                 .filter(Objects::nonNull)

@@ -1,6 +1,9 @@
 package io.github.robertograham.nadir;
 
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Entry-point for the {@code nadir} library
@@ -55,6 +58,24 @@ public interface Nadir extends AutoCloseable {
     String password();
 
     /**
+     * @return {@code true} if this instance was configured to establish an
+     * XMPP connection or {@code false} otherwise
+     * @since 1.1.0
+     */
+    default boolean establishXmppConnection() {
+        return false;
+    }
+
+    /**
+     * @return {@code true} if this instance was configured to debug
+     * XMPP traffic or {@code false} otherwise
+     * @since 1.1.0
+     */
+    default boolean debugXmppTraffic() {
+        return false;
+    }
+
+    /**
      * @return A non-expired instance of {@link Token} with at least 5 minutes of use left
      * @since 1.0.0
      */
@@ -65,6 +86,15 @@ public interface Nadir extends AutoCloseable {
      * @since 1.0.0
      */
     AccountResource accounts();
+
+    /**
+     * @return an {@link Optional} of {@link XMPPTCPConnection} that's non-empty if this instance was
+     * configured to establish an XMPP connection
+     * @since 1.1.0
+     */
+    default Optional<XMPPTCPConnection> xmppConnection() {
+        return Optional.empty();
+    }
 
     @Override
     void close();
@@ -77,9 +107,34 @@ public interface Nadir extends AutoCloseable {
     interface Builder {
 
         /**
+         * {@code false} by default
+         *
+         * @param establishXmppConnection {@code true} to establish an XMPP connection
+         *                                or {@code false} otherwise
+         * @return the {@code Builder} instance this method was called on
+         * @since 1.1.0
+         */
+        default Builder establishXmppConnection(final boolean establishXmppConnection) {
+            return this;
+        }
+
+        /**
+         * {@code true} by default
+         *
+         * @param debugXmppTraffic {@code true} to debug XMPP traffic
+         *                         or {@code false} otherwise
+         * @return the {@code Builder} instance this method was called on
+         * @since 1.1.0
+         */
+        default Builder debugXmppTraffic(final boolean debugXmppTraffic) {
+            return this;
+        }
+
+        /**
          * @return An authenticated instance of {@link Nadir}
          * @throws StryderErrorException If any erroneous HTTP responses are encountered during authentication
-         * @throws IOException           If any number of problems occur during authentication
+         * @throws IOException           If any number of problems occur during authentication or when establishing
+         *                               an XMPP connection
          * @since 1.0.0
          */
         Nadir build() throws IOException;
